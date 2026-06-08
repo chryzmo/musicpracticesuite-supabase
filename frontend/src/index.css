@@ -1,0 +1,25 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #222;
+  background: #fff;
+}
+
+button {
+  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  font-size: 0.9rem;
+}
+
+button:hover:not(:disabled) { background: #f0f0f0; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+a { color: #0066cc; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+h1, h2 { margin-top: 0; }

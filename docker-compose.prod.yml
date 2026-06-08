@@ -1,0 +1,10 @@
+# Production overrides — see Phase 8 for full implementation
+# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up
+services:
+  backend:
+    restart: always
+    deploy:
+      replicas: 3
+
+  frontend:
+    restart: always
