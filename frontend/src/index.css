@@ -23,3 +23,8 @@ a { color: #0066cc; text-decoration: none; }
 a:hover { text-decoration: underline; }
 
 h1, h2 { margin-top: 0; }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
