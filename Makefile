@@ -83,7 +83,8 @@ secrets: check-env ## Set Edge Function secrets on the hosted project
 
 .PHONY: functions-deploy
 functions-deploy: check-env ## Deploy Edge Functions
-	@$(WITH_PROD_ENV) $(SUPABASE) functions deploy --project-ref "$$SUPABASE_PROJECT_REF"
+	@# --use-api bundles server-side; local container bundling can't read the source under SELinux
+	@$(WITH_PROD_ENV) $(SUPABASE) functions deploy --use-api --project-ref "$$SUPABASE_PROJECT_REF"
 
 .PHONY: frontend-build
 frontend-build: check-env ## Build the frontend against the hosted project
