@@ -1,22 +1,40 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { supabase } from '../lib/supabase'
 
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(() => localStorage.getItem('auth_token'))
+  const queryClient = useQueryClient()
+  const [session, setSession] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  function login(newToken) {
-    localStorage.setItem('auth_token', newToken)
-    setToken(newToken)
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session)
+      setLoading(false)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
+
+  function signIn(provider) {
+    return supabase.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo: window.location.origin },
+    })
   }
 
-  function logout() {
-    localStorage.removeItem('auth_token')
-    setToken(null)
+  async function logout() {
+    await supabase.auth.signOut()
+    queryClient.clear()
   }
 
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider value={{ session, user: session?.user ?? null, loading, signIn, logout }}>
       {children}
     </AuthContext.Provider>
   )

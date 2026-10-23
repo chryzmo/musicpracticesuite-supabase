@@ -1,22 +1,24 @@
 import { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import client from '../api/client'
+
+const PROVIDERS = [
+  { id: 'github', label: 'Continue with GitHub' },
+  { id: 'google', label: 'Continue with Google' },
+]
 
 export default function Login() {
-  const { login } = useAuth()
-  const [loading, setLoading] = useState(false)
+  const { signIn } = useAuth()
+  const [pending, setPending] = useState(null)
   const [error, setError] = useState(null)
 
-  async function handleDevLogin() {
-    setLoading(true)
+  async function handleSignIn(provider) {
+    setPending(provider)
     setError(null)
-    try {
-      const res = await client.post('/api/dev/token', { email: 'dev@example.com' })
-      login(res.data.token)
-    } catch {
-      setError('Login failed — is the backend running?')
-    } finally {
-      setLoading(false)
+    // On success the browser leaves for the provider, so only failures land here
+    const { error } = await signIn(provider)
+    if (error) {
+      setError(error.message)
+      setPending(null)
     }
   }
 
@@ -24,11 +26,15 @@ export default function Login() {
     <div style={containerStyle}>
       <div style={cardStyle}>
         <h1 style={{ marginTop: 0 }}>Musician Practice Suite</h1>
-        <p style={{ color: '#666', marginBottom: '1.5rem' }}>Development login — not for production use.</p>
+        <p style={{ color: '#666', marginBottom: '1.5rem' }}>Sign in to track your practice.</p>
         {error && <p style={{ color: '#c00', marginBottom: '1rem' }}>{error}</p>}
-        <button onClick={handleDevLogin} disabled={loading} style={btnStyle}>
-          {loading ? 'Signing in…' : 'Dev Login'}
-        </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {PROVIDERS.map(p => (
+            <button key={p.id} onClick={() => handleSignIn(p.id)} disabled={pending !== null} style={btnStyle}>
+              {pending === p.id ? 'Redirecting…' : p.label}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   )

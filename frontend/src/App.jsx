@@ -7,9 +7,10 @@ import SightReading from './pages/SightReading'
 import ReedTracker from './pages/ReedTracker'
 
 function Layout() {
-  const { token, logout } = useAuth()
+  const { session, loading, logout } = useAuth()
 
-  if (!token) return <Login />
+  if (loading) return null
+  if (!session) return <Login />
 
   return (
     <>
