@@ -3,7 +3,6 @@ import { useAuth } from '../contexts/AuthContext'
 
 const PROVIDERS = [
   { id: 'github', label: 'Continue with GitHub' },
-  { id: 'google', label: 'Continue with Google' },
 ]
 
 export default function Login() {

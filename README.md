@@ -6,7 +6,7 @@ A multi-feature SaaS application for musicians: practice log with AI insights, s
 
 - **Frontend**: React + Vite, hosted on Cloudflare Pages
 - **Database**: Supabase Postgres, with row-level security (RLS) on every table
-- **Auth**: Supabase Auth (GitHub and Google sign-in)
+- **Auth**: Supabase Auth (GitHub sign-in)
 - **Server code**: one Supabase Edge Function (`insights`) that calls the Anthropic API
 
 The browser talks to Postgres directly through `supabase-js`. RLS policies limit every
@@ -35,7 +35,7 @@ make install
 
 ### 2. Configure OAuth for local sign-in
 
-Create a GitHub OAuth app and/or a Google OAuth client with this callback URL:
+Create a GitHub OAuth app (GitHub → Settings → Developer settings → OAuth Apps) with this callback URL:
 
 ```
 http://127.0.0.1:54321/auth/v1/callback
@@ -82,8 +82,9 @@ Supabase Studio runs at http://127.0.0.1:54323.
 5. **Create the Pages project**: `make pages-create`. Note the `*.pages.dev` URL it prints.
 6. **Supabase Auth** (dashboard → Authentication):
    - URL Configuration: set **Site URL** to the Pages URL and add it to **Redirect URLs**.
-   - Sign In / Providers: enable GitHub and Google with production OAuth credentials whose
-     callback URL is `https://<project-ref>.supabase.co/auth/v1/callback`.
+   - Sign In / Providers: enable GitHub with the credentials of a **separate** production
+     GitHub OAuth app (an OAuth app allows only one callback URL) whose callback URL is
+     `https://<project-ref>.supabase.co/auth/v1/callback`.
 
 ### Deploy
 
@@ -135,7 +136,7 @@ Each target can also be run on its own.
 | File | Used for |
 |---|---|
 | `frontend/.env` | `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` for local dev |
-| `supabase/.env` | OAuth credentials for the local stack |
+| `supabase/.env` | GitHub OAuth credentials for the local stack |
 | `supabase/functions/.env` | Edge Function secrets for the local stack |
 | `.env.production` | Everything `make deploy` needs |
 

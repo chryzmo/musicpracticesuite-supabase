@@ -17,8 +17,8 @@ build/
 *.log
 npm-debug.log*
 
-# Supabase CLI local state
-supabase/.temp/
+# Wrangler (Cloudflare) local cache
+.wrangler/
 
 # Test coverage
 coverage/

@@ -8,7 +8,7 @@ Supabase (Postgres, Auth, Edge Functions) with the frontend on Cloudflare Pages.
 | Concern | Before | After |
 |---|---|---|
 | Database | Postgres in Docker, Prisma migrations | Supabase Postgres, SQL migrations in `supabase/migrations/` |
-| Auth | Dev-only JWT route | Supabase Auth with GitHub and Google OAuth |
+| Auth | Dev-only JWT route | Supabase Auth with GitHub OAuth |
 | CRUD (reeds, practice, sight-reading log) | Express controllers | `supabase-js` from the browser, enforced by row-level security (RLS) |
 | Reed usage minutes | Two separate Prisma calls in the controller | Postgres trigger on `practice_sessions` |
 | Practice summary and streak | Express, server time zone | Computed in the browser, user's local time zone |
@@ -28,7 +28,7 @@ column names stay inside the API layer.
 ## Phase 1: Supabase scaffold and schema ✅
 - Root `package.json` with pinned dev tools: `supabase` CLI, `wrangler`.
 - `supabase init`; adjust `supabase/config.toml` (site URL, redirect URLs,
-  GitHub/Google providers reading secrets from env, analytics off for Podman).
+  GitHub provider reading secrets from env, analytics off for Podman).
 - Migration `..._init.sql`:
   - `profiles` (`id uuid pk references auth.users on delete cascade`,
     `email`, `display_name`, `instrument`, `created_at`), filled by an
@@ -49,13 +49,13 @@ column names stay inside the API layer.
   `VITE_SUPABASE_PUBLISHABLE_KEY`.
 - `AuthContext` wraps `supabase.auth` session (`getSession` +
   `onAuthStateChange`); exposes `session`, `user`, `signIn(provider)`, `logout`.
-- `Login` page with "Continue with GitHub" and "Continue with Google"
+- `Login` page with "Continue with GitHub". Google sign-in was dropped.
   (`signInWithOAuth`, redirect back to the app).
 - Manual setup (documented in README):
-  - GitHub OAuth app and Google OAuth client, callback
+  - GitHub OAuth apps (one per environment), callback
     `https://<project-ref>.supabase.co/auth/v1/callback` (and
     `http://127.0.0.1:54321/auth/v1/callback` for local).
-  - Enable both providers in the Supabase dashboard; add the Pages URL to
+  - Enable GitHub in the Supabase dashboard; add the Pages URL to
     Auth redirect URLs.
 
 ## Phase 3: Frontend data layer ✅
@@ -100,5 +100,5 @@ column names stay inside the API layer.
 ## Prerequisites from you
 - `sudo dnf install podman` and enable the socket (Phase 1 local testing).
 - `! npx supabase login` and the project ref (Phase 1 link / Phase 5 deploy).
-- GitHub + Google OAuth credentials (Phase 2).
+- GitHub OAuth credentials (Phase 2).
 - `! npx wrangler login` (Phase 5).
