@@ -1,0 +1,17 @@
+{
+  "name": "musicpracticesuite-supabase",
+  "private": true,
+  "description": "Tooling for the Supabase + Cloudflare Pages deployment",
+  "scripts": {
+    "supabase": "supabase",
+    "wrangler": "wrangler"
+  },
+  "devDependencies": {
+    "supabase": "2.122.0",
+    "wrangler": "4.152.0"
+  },
+  "allowScripts": {
+    "workerd@1.20261019.1": true,
+    "esbuild@0.28.2": true
+  }
+}
