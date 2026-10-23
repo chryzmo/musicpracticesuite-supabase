@@ -25,7 +25,7 @@ column names stay inside the API layer.
 - New repo `chryzmo/musicpracticesuite-supabase` with history carried over.
 - This plan committed.
 
-## Phase 1: Supabase scaffold and schema
+## Phase 1: Supabase scaffold and schema ✅
 - Root `package.json` with pinned dev tools: `supabase` CLI, `wrangler`.
 - `supabase init`; adjust `supabase/config.toml` (site URL, redirect URLs,
   GitHub/Google providers reading secrets from env, analytics off for Podman).
@@ -44,7 +44,7 @@ column names stay inside the API layer.
 - Trigger on `practice_sessions` insert/update/delete adjusts
   `reeds.usage_minutes` (handles reed changes and duration edits).
 
-## Phase 2: Auth
+## Phase 2: Auth ✅
 - `frontend/src/lib/supabase.js` client from `VITE_SUPABASE_URL` and
   `VITE_SUPABASE_PUBLISHABLE_KEY`.
 - `AuthContext` wraps `supabase.auth` session (`getSession` +
@@ -58,7 +58,7 @@ column names stay inside the API layer.
   - Enable both providers in the Supabase dashboard; add the Pages URL to
     Auth redirect URLs.
 
-## Phase 3: Frontend data layer
+## Phase 3: Frontend data layer ✅
 - Replace axios in `api/practice.js`, `api/reeds.js`, `api/sightReading.js`
   with `supabase-js` queries plus a small camelCase/snake_case mapper.
   - `practice.list` → `.range()` with `count: 'exact'`, embeds `reed(identifier, reed_type)`.
@@ -70,14 +70,14 @@ column names stay inside the API layer.
     (validation kept), returned as a resolved promise.
 - Remove axios and `api/client.js`.
 
-## Phase 4: AI insights Edge Function
+## Phase 4: AI insights Edge Function ✅
 - `supabase/functions/insights/index.ts`: authenticate the caller from the
   `Authorization` header, read the last 30 sessions with a user-scoped client
   (RLS applies), check/write `insights_cache`, call Anthropic.
 - Secret `ANTHROPIC_API_KEY` set via `supabase secrets set`.
 - `practice.insights` calls `supabase.functions.invoke('insights')`.
 
-## Phase 5: Cleanup, Makefile, deploy
+## Phase 5: Cleanup, Makefile, deploy ✅
 - Delete `backend/`, `docker-compose*.yml`, Dockerfiles, `.vscode` tasks that
   use Docker/PowerShell.
 - `Makefile` targets:
